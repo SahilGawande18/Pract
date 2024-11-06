@@ -1,0 +1,63 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Function and its gradient
+def func(x):
+    return (x + 3)**2
+
+def gradient(x):
+    return 2 * (x + 3)
+
+# Gradient Descent Algorithm
+def gradient_descent(starting_point, learning_rate, precision, max_iterations):
+    x = starting_point
+    history = [x]  # Store the history of x values
+
+    for i in range(max_iterations):
+        grad = gradient(x)
+        new_x = x - learning_rate * grad  # Update x
+        history.append(new_x)  # Save the new x value
+
+        # Check for convergence
+        if abs(new_x - x) < precision:
+            break
+        
+        x = new_x
+    
+    return history
+
+# Initialize parameters
+starting_point = 2  # Starting point for gradient descent
+learning_rate = 0.1  # Step size
+precision = 1e-6  # Convergence threshold
+max_iterations = 1000  # Maximum number of iterations
+
+# Run gradient descent
+history = gradient_descent(starting_point, learning_rate, precision, max_iterations)
+
+# Create x values for the function plot
+x_values = np.linspace(-10, 4, 400)
+y_values = func(x_values)
+
+# Plotting
+plt.figure(figsize=(8, 6))
+
+# Plot the function y = (x + 3)^2
+plt.plot(x_values, y_values, label="y = (x + 3)^2", color="blue")
+
+# Plot the gradient descent updates (x values)
+history_y = func(np.array(history))  # Get y values for each x in the history
+plt.scatter(history, history_y, color="red", label="Gradient Descent Steps", zorder=5)
+
+# Highlight the minimum point
+plt.scatter(-3, func(-3), color="green", zorder=5, label="Minimum at x = -3")
+
+# Labels and Title
+plt.title("Gradient Descent on the Function y = (x + 3)^2")
+plt.xlabel("x")
+plt.ylabel("y")
+plt.legend()
+
+# Show the plot
+plt.grid(True)
+plt.show()
